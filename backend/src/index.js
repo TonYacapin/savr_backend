@@ -21,6 +21,8 @@ app.get('/', (req, res) => {
     res.send('Express server is running!');
 });
 
+
+app.use('/login', require('./routes/loginRoutes'));
 app.use('/users', require('./routes/userRoutes'));
 
 // Start server
