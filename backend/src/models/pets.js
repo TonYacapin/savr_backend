@@ -11,7 +11,7 @@ const petSchema = new mongoose.Schema({
     agility: { type: Number, default: 1 },
     intelligence: { type: Number, default: 1 },
     rarity: { type: String, required: true },
-    specialAbility: { type: String, required: true }
+    specialAbility: { type: String, required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Pet', petSchema);

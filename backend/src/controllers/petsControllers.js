@@ -51,7 +51,39 @@ exports.getUserPets = async (req, res) => {
 };
 
 
+
+exports.giftPet = async (req, res) => {
+    try {
+        const { petId, toUserId } = req.params;
+        const fromUserId = req.user.id;
+        
+        // Verify pet exists and belongs to current user
+        const pet = await Pet.findOne({ _id: petId, owner: fromUserId });
+        if (!pet) {
+            return res.status(404).json({ error: 'Pet not found or you do not own this pet' });
+        }
+        
+        // Verify recipient user exists
+        const User = mongoose.model('User');
+        const toUser = await User.findById(toUserId);
+        if (!toUser) {
+            return res.status(404).json({ error: 'Recipient user not found' });
+        }
+        
+        // Transfer ownership
+        pet.owner = toUserId;
+        await pet.save();
+        
+        res.status(200).json({ 
+            message: `Pet ${pet.name} successfully gifted to ${toUser.username}`,
+            pet
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 // /pets/all
+
 // Get pets of all users
 exports.getAllUsersPets = async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createSavingPlan, getUserSavingPlans, updateSavingPlan } = require('../controllers/savingplanControllers');
+const { createSavingPlan, getUserSavingPlans, updateSavingPlan, getAllUsersSavingPlans } = require('../controllers/savingplanControllers');
 const authMiddleware = require('../middleware/authMiddleware');
 
 
@@ -11,5 +11,7 @@ router.post('/create', authMiddleware, createSavingPlan);
 router.get('/', authMiddleware, getUserSavingPlans);
 
 router.put('/update', authMiddleware, updateSavingPlan);
+
+router.get('/all', getAllUsersSavingPlans);
 
 module.exports = router;
