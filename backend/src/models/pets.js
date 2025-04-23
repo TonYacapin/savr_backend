@@ -10,6 +10,7 @@ const petSchema = new mongoose.Schema({
     strength: { type: Number, default: 1 },
     agility: { type: Number, default: 1 },
     intelligence: { type: Number, default: 1 },
+    experience: { type: Number, default: 0 }, // New field to track XP
     rarity: { type: String, required: true },
     specialAbility: { type: String, required: true },
 }, { timestamps: true });

@@ -94,7 +94,6 @@ exports.getAllUsersPets = async (req, res) => {
     }
 };
 
-// pets/pve/:petId
 exports.petVsEnvironment = async (req, res) => {
     try {
         const { petId } = req.params;
@@ -128,17 +127,39 @@ exports.petVsEnvironment = async (req, res) => {
         }
 
         const result = petHealth > 0 ? 'win' : 'lose';
+
+        // If the pet wins, calculate XP and level up
+        if (result === 'win') {
+            const baseXP = 50 + enemy.level * 5; // XP based on enemy level
+            pet.experience = (pet.experience || 0) + baseXP;
+
+            // Check if the pet levels up
+            const xpForNextLevel = pet.level * 100; // Example: 100 XP per level
+            if (pet.experience >= xpForNextLevel) {
+                pet.level += 1;
+                pet.experience -= xpForNextLevel;
+
+                // Increase stats on level up
+                pet.strength += getRandomStat(1, 3);
+                pet.agility += getRandomStat(1, 3);
+                pet.intelligence += getRandomStat(1, 2);
+            }
+
+            // Save the updated pet
+            await pet.save();
+        }
+
         res.json({
             message: `Battle finished! Your pet ${result}s.`,
             petHealth: Math.max(petHealth, 0),
             enemyHealth: Math.max(enemyHealth, 0),
             enemy,
+            pet, // Return the updated pet
         });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 };
-
 // pets/pvp/:petId1/:petId2
 exports.petVsPet = async (req, res) => {
     try {
